@@ -13,8 +13,10 @@ class Config:
     try:
         os.path.getsize("data/PyFurbot/config.json")
     except:
-        os.mkdir("data/PyFurbot")
-        open("data/PyFurbot/config.json", mode="w")
+        try:
+            os.mkdir("data/PyFurbot")
+        except FileExistsError:
+            open("data/PyFurbot/config.json", mode="w")
     finally:
         with open(file="data/PyFurbot/config.json", mode="r+", encoding="utf-8") as config:
             default = {"ID": 0, "Token": "", "TITLE": "---ヾ(≧▽≦*)o---", "TITLE2": "今天你吸毛了嘛（＾∀＾●）ﾉｼ",
