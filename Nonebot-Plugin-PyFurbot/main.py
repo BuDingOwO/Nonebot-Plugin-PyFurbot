@@ -1,13 +1,19 @@
 import requests
 import time
-from .sign import getsign
-from .Config import Config
+from .utils import BuildSign
+from .config import Config
+from nonebot import get_driver
+
+# global_config = get_driver().config
+# config = Config.parse_obj(global_config)
 
 authkey = Config.Token
 api_url = "https://api.tail.icu/"
-qq = Config.QQ
+qq = Config.ID
 
 
+# =============
+# 获取时间
 def gettime():
     t = time.time()
     t = str(round(t * 1000) / 1000)
@@ -18,8 +24,9 @@ def gettime():
 def GetFursuitRand():
     timestamp = gettime()
     api_path = "api/v2/getFursuitRand"
-    params = {"qq": qq, "timestamp": timestamp, "sign": getsign(api_path, timestamp, authkey)}
+    params = {"qq": qq, "timestamp": timestamp, "sign": BuildSign(api_path, timestamp, authkey)}
     response = requests.get(api_url + api_path, params).json()
+    print("\n" + str(params) + "\n")
     return response
 
 
@@ -27,7 +34,7 @@ def GetFursuitRand():
 def GetFursuitByName(name: str):
     timestamp = gettime()
     api_path = "api/v2/getFursuitByName"
-    params = {"qq": qq, "timestamp": timestamp, "sign": getsign(api_path, timestamp, authkey), "name": name}
+    params = {"qq": qq, "timestamp": timestamp, "sign": BuildSign(api_path, timestamp, authkey), "name": name}
     response = requests.get(api_url + api_path, params).json()
     return response
 
@@ -36,10 +43,31 @@ def GetFursuitByName(name: str):
 def GetFurByIdCommand(fid: str):
     timestamp = gettime()
     api_path = "api/v2/getFursuitByID"
-    params = {"qq": qq, "timestamp": timestamp, "sign": getsign(api_path, timestamp, authkey), "fid": fid}
+    params = {"qq": qq, "timestamp": timestamp, "sign": BuildSign(api_path, timestamp, authkey), "fid": fid}
     response = requests.get(api_url + api_path, params).json()
     return response
 
-# 每日鉴毛
 
+# 每日鉴毛
+def GetDailyFurCommand(type: str, key: int or str):
+    if type == "random":
+        timestamp = gettime()
+        api_path = "api/v2/DailyFursuit/Rand"
+        params = {"qq": qq, "timestamp": timestamp, "sign": BuildSign(api_path, timestamp, authkey)}
+        response = requests.get(api_url + api_path, params).json()
+        return response
+    if type == "id":
+        timestamp = gettime()
+        api_path = "api/v2/DailyFursuit/Id"
+        params = {"qq": qq, "timestamp": timestamp, "sign": BuildSign(api_path, timestamp, authkey), "id": key}
+        response = requests.get(api_url + api_path, params).json()
+        return response
+    if type == "name":
+        timestamp = gettime()
+        api_path = "api/v2/DailyFursuit/Name"
+        params = {"qq": qq, "timestamp": timestamp, "sign": BuildSign(api_path, timestamp, authkey), "name": key}
+        response = requests.get(api_url + api_path, params).json()
+        return response
+    else:
+        return {"code": 501, "msg": "参数不合法"}
 

@@ -32,3 +32,10 @@ git https://github.com/BuDingOwO/Nonebot-Plugin-PyFur.git
 1. 来只毛
 2. 来只 xxx
 3. 找毛图
+4. 每日鉴毛
+
+配置文件路径:
+
+```
+<bot.py>/data/PyFurBot/config.json
+```
